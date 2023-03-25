@@ -1,7 +1,7 @@
 # Task №1. Create class and do logging
 import pathlib
 from abc import ABC
-import logging
+import logging.handlers
 from pathlib import *
 
 
@@ -17,18 +17,28 @@ class CustomsHouse(ABC):
     def see_date(self, border_crossing_date):
         pass
 
-#Creating a main and backup folder for storing logs
-new_path = Path(pathlib.Path.home(), "folder_log_copy")
-new_path.mkdir(parents=True, exist_ok=True)
-file_log = logging.FileHandler(Path(new_path, "logcode_copy.log"))
 
-new_path_copy = Path(pathlib.Path.cwd(), "folder_log")
-new_path_copy.mkdir(parents=True, exist_ok=True)
-file_log_copy = logging.FileHandler(Path(new_path_copy, "logcode.log"))
+# Setting up logging to the main and backup folders
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-#Logging options
-logging.basicConfig(handlers=(file_log, file_log_copy), level=logging.INFO,
-                    format="%(asctime)s %(levelname)s %(message)s")
+new_path_folder_copy = Path(pathlib.Path.home(), "folder_log_copy")
+new_path_folder_copy.mkdir(parents=True, exist_ok=True)
+new_path_file_copy = Path(new_path_folder_copy, "logcode_copy.log")
+new_path_file_copy.touch(exist_ok=True)
+print(new_path_file_copy)
+logger_handler = logging.handlers.RotatingFileHandler(new_path_file_copy, maxBytes=5000, backupCount=2)
+logger.addHandler(logger_handler)
+logger_handler.setFormatter(logger_formatter)
+
+new_path_folder = Path(pathlib.Path.cwd(), "folder_log")
+new_path_folder.mkdir(parents=True, exist_ok=True)
+new_path_file = Path(new_path_folder, "logcode.log")
+new_path_file.touch(exist_ok=True)
+logger_handler = logging.handlers.RotatingFileHandler(new_path_file, maxBytes=5000, backupCount=2)
+logger.addHandler(logger_handler)
+logger_handler.setFormatter(logger_formatter)
 
 
 class Customs(CustomsHouse):
