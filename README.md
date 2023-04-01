@@ -6,6 +6,7 @@
 * abc
 * pathlib
 * logging
+* datetime
 
-Пример выполнения программы показан в функции example() в файле Lab4_work_1.py
+Пример выполнения программы показан в функциях example_land()  и example_air() в файле Lab4_work_1.py
 

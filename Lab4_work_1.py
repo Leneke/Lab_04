@@ -1,15 +1,17 @@
-# Task №1. Create class and do logging
-import pathlib
+# Task №1. Create a class and set up logging in two different folders
+from datetime import datetime
 from abc import ABC, abstractmethod
 import logging.handlers
-from pathlib import *
+import my_logger
+
+logger = logging.getLogger('my_logger')
 
 
 class AbstractCustomsHouse(ABC):
     """Abstract Class"""
 
     @abstractmethod
-    def register_list_add(self, name_value, date_value):
+    def register_list_add(self, name_value):
         pass
 
     @abstractmethod
@@ -21,28 +23,6 @@ class AbstractCustomsHouse(ABC):
         pass
 
 
-# Setting up logging to the main and backup folders
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logger_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-
-new_path_folder_copy = Path(pathlib.Path.home(), "folder_log_copy")
-new_path_folder_copy.mkdir(parents=True, exist_ok=True)
-new_path_file_copy = Path(new_path_folder_copy, "logcode_copy.log")
-new_path_file_copy.touch(exist_ok=True)
-logger_handler = logging.handlers.RotatingFileHandler(new_path_file_copy, maxBytes=5000, backupCount=2)
-logger.addHandler(logger_handler)
-logger_handler.setFormatter(logger_formatter)
-
-new_path_folder = Path(pathlib.Path.cwd(), "folder_log")
-new_path_folder.mkdir(parents=True, exist_ok=True)
-new_path_file = Path(new_path_folder, "logcode.log")
-new_path_file.touch(exist_ok=True)
-logger_handler = logging.handlers.RotatingFileHandler(new_path_file, maxBytes=5000, backupCount=2)
-logger.addHandler(logger_handler)
-logger_handler.setFormatter(logger_formatter)
-
-
 class CustomsAir(AbstractCustomsHouse):
     """Class air customs"""
     logging.info(f'Class CustomsAir instance created')
@@ -50,13 +30,14 @@ class CustomsAir(AbstractCustomsHouse):
     def __init__(self):
         self.registration_list = []
 
-    def register_list_add(self, name_value: str, date_value: int):
+    def register_list_add(self, name_value: str):
         """The method adds information about those who crossed the border
         Options:
                 name_value: str - name of the person who crossed the border
-                date_value: int - date of border crossing
+                The current date is added automatically
         Return value:
                     None"""
+        date_value = datetime.today().strftime("%d.%m.%Y")
         logging.info(f'Added data on crossing the air border. Name-{name_value}, date-{date_value}')
         reg_list = {'Name': name_value, 'Date': date_value}
         self.registration_list.append(reg_list)
@@ -90,13 +71,14 @@ class CustomsLand(AbstractCustomsHouse):
     def __init__(self):
         self.registration_list = []
 
-    def register_list_add(self, name_value: str, date_value: int):
+    def register_list_add(self, name_value: str):
         """The method adds information about those who crossed the land border
         Options:
                 name_value: str - name of the person who crossed the border
-                date_value: int - date of border crossing
+                The current date is added automatically
         Return value:
                     None"""
+        date_value = datetime.today().strftime("%d.%m.%Y")
         logging.info(f'Land border crossing data added. Name-{name_value}, date-{date_value}')
         reg_list = {'Name': name_value, 'Date': date_value}
         self.registration_list.append(reg_list)
@@ -126,30 +108,28 @@ class CustomsLand(AbstractCustomsHouse):
 def example_land():
     # An example of creating an instance of a class CustomsLand and using class methods
     horgos = CustomsLand()
-    horgos.register_list_add('Misha', 15)
-    horgos.register_list_add('Masha', 5)
-    horgos.register_list_add('Natasha', 15)
-    horgos.register_list_add('Sasha', 15)
-    horgos.register_list_add('Dasha', 15)
+    horgos.register_list_add('Misha')
+    horgos.register_list_add('Masha')
+    horgos.register_list_add('Natasha')
+    horgos.register_list_add('Sasha')
+    horgos.register_list_add('Dasha')
     print(horgos.display_register_list())
     print()
-    print(horgos.see_date(15))
+    print(horgos.see_date('01.04.2023'))
     print()
-    print(horgos.see_date(5))
 
 
 def example_air():
     # An example of creating an instance of a class CustomsAir and using class methods
     almaty = CustomsAir()
-    almaty.register_list_add('Nastya', 11)
-    almaty.register_list_add('Kristina', 25)
-    almaty.register_list_add('Diana', 25)
+    almaty.register_list_add('Nastya')
+    almaty.register_list_add('Kristina')
+    almaty.register_list_add('Diana')
     print(almaty.display_register_list())
     print()
-    print(almaty.see_date(11))
-    print()
-    print(almaty.see_date(25))
+    print(almaty.see_date('02.04.2023'))
 
 
-example_land()
-example_air()
+if __name__ == '__main__':
+    example_land()
+    example_air()
