@@ -112,6 +112,7 @@ class CustomsLand(AbstractCustomsHouse):
         return f'Land border crossing period: from {start_date} to {end_date} \n' \
                f'Number of border crossings: {count_number_of_crossings}'
 
+    
 def example_land():
     # An example of creating an instance of a class CustomsLand and using class methods
     horgos = CustomsLand()
